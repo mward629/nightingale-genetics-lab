@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Sandbox - Nightingale Genetics Lab</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body style="font-family: Arial; text-align:center;">
 
@@ -23,7 +24,12 @@
 <h3>Offspring:</h3>
 <div id="results"></div>
 
+<h3>Observed Genotype Distribution</h3>
+<canvas id="chart" width="400" height="200"></canvas>
+
 <script>
+let chart;
+
 async function generate() {
     const response = await fetch("/generate", {
         method: "POST",
@@ -36,8 +42,42 @@ async function generate() {
     });
 
     const data = await response.json();
+
     document.getElementById("results").innerText =
         data.offspring.join(", ");
+
+    updateChart(data.offspring);
+}
+
+function updateChart(offspring) {
+
+    let counts = {};
+    offspring.forEach(g => {
+        counts[g] = (counts[g] || 0) + 1;
+    });
+
+    const labels = Object.keys(counts);
+    const values = Object.values(counts);
+
+    const ctx = document.getElementById("chart").getContext("2d");
+
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Observed Count",
+                data: values
+            }]
+        },
+        options: {
+            responsive: false
+        }
+    });
 }
 </script>
 
