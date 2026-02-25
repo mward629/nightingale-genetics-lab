@@ -85,7 +85,7 @@ async function generate() {
 function updateCharts(offspring) {
 
     const showExpected = document.getElementById("toggleExpected").checked;
-    
+
     let genotypeCounts = { "BB": 0, "Bb": 0, "bb": 0 };
     let phenotypeCounts = { "Black": 0, "Brown": 0 };
 
@@ -113,66 +113,78 @@ function updateCharts(offspring) {
         "Brown": total * 0.25
     };
 
+    // -------- GENOTYPE CHART --------
     const gctx = document.getElementById("genotypeChart").getContext("2d");
     if (genotypeChart) genotypeChart.destroy();
+
+    let genotypeDatasets = [
+        {
+            label: "Observed",
+            data: [
+                genotypeCounts["BB"],
+                genotypeCounts["Bb"],
+                genotypeCounts["bb"]
+            ]
+        }
+    ];
+
+    if (showExpected) {
+        genotypeDatasets.push({
+            label: "Expected",
+            data: [
+                expectedGenotype["BB"],
+                expectedGenotype["Bb"],
+                expectedGenotype["bb"]
+            ]
+        });
+    }
 
     genotypeChart = new Chart(gctx, {
         type: "bar",
         data: {
             labels: ["BB", "Bb", "bb"],
-            datasets: [
-                {
-                    label: "Observed",
-                    data: [
-                        genotypeCounts["BB"],
-                        genotypeCounts["Bb"],
-                        genotypeCounts["bb"]
-                    ]
-                },
-                {
-                    label: "Expected",
-                    data: [
-                        expectedGenotype["BB"],
-                        expectedGenotype["Bb"],
-                        expectedGenotype["bb"]
-                    ]
-                }
-            ]
+            datasets: genotypeDatasets
         },
         options: {
-    responsive: true,
-    maintainAspectRatio: false
-}
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 
+    // -------- PHENOTYPE CHART --------
     const pctx = document.getElementById("phenotypeChart").getContext("2d");
     if (phenotypeChart) phenotypeChart.destroy();
+
+    let phenotypeDatasets = [
+        {
+            label: "Observed",
+            data: [
+                phenotypeCounts["Black"],
+                phenotypeCounts["Brown"]
+            ]
+        }
+    ];
+
+    if (showExpected) {
+        phenotypeDatasets.push({
+            label: "Expected",
+            data: [
+                expectedPhenotype["Black"],
+                expectedPhenotype["Brown"]
+            ]
+        });
+    }
 
     phenotypeChart = new Chart(pctx, {
         type: "bar",
         data: {
             labels: ["Black", "Brown"],
-            datasets: [
-                {
-                    label: "Observed",
-                    data: [
-                        phenotypeCounts["Black"],
-                        phenotypeCounts["Brown"]
-                    ]
-                },
-                {
-                    label: "Expected",
-                    data: [
-                        expectedPhenotype["Black"],
-                        expectedPhenotype["Brown"]
-                    ]
-                }
-            ]
+            datasets: phenotypeDatasets
         },
         options: {
-    responsive: true,
-    maintainAspectRatio: false
-}
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 }
 </script>
