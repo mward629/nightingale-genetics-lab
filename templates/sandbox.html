@@ -66,6 +66,32 @@
     <strong>Total Puppies:</strong> 
     <span id="totalCount">0</span>
 </div>
+
+    <div style="margin-top:40px; border:1px solid #ddd; padding:20px; border-radius:8px;">
+    <h3>Build Your Punnett Square</h3>
+
+    <table border="1" cellpadding="10" style="margin:auto;">
+        <tr>
+            <td></td>
+            <td><input id="top1" style="width:30px;"></td>
+            <td><input id="top2" style="width:30px;"></td>
+        </tr>
+        <tr>
+            <td><input id="side1" style="width:30px;"></td>
+            <td><input id="cell1" style="width:50px;"></td>
+            <td><input id="cell2" style="width:50px;"></td>
+        </tr>
+        <tr>
+            <td><input id="side2" style="width:30px;"></td>
+            <td><input id="cell3" style="width:50px;"></td>
+            <td><input id="cell4" style="width:50px;"></td>
+        </tr>
+    </table>
+
+    <br>
+    <button onclick="checkPunnett()">Check My Square</button>
+    <div id="punnettFeedback" style="margin-top:15px; font-weight:bold;"></div>
+</div>
     
 </div>
 
@@ -227,6 +253,40 @@ function updateCharts(offspring) {
     
     if (genotypeChart) genotypeChart.destroy();
     if (phenotypeChart) phenotypeChart.destroy();
+}
+
+    function checkPunnett() {
+
+    const p1 = document.getElementById("p1").value;
+    const p2 = document.getElementById("p2").value;
+
+    // Generate correct combinations
+    const correct = [];
+    for (let a of p1) {
+        for (let b of p2) {
+            correct.push((a + b).split("").sort().join(""));
+        }
+    }
+
+    const student = [
+        document.getElementById("cell1").value,
+        document.getElementById("cell2").value,
+        document.getElementById("cell3").value,
+        document.getElementById("cell4").value
+    ].map(x => x.split("").sort().join(""));
+
+    correct.sort();
+    student.sort();
+
+    const feedback = document.getElementById("punnettFeedback");
+
+    if (JSON.stringify(correct) === JSON.stringify(student)) {
+        feedback.innerText = "✅ Correct Punnett Square!";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerText = "❌ Not quite right. Check allele combinations.";
+        feedback.style.color = "red";
+    }
 }
     
 </script>
