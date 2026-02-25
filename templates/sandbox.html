@@ -52,9 +52,11 @@ async function generate() {
 function updateChart(offspring) {
 
     let counts = {};
-    offspring.forEach(g => {
-        counts[g] = (counts[g] || 0) + 1;
-    });
+offspring.forEach(g => {
+    // Sort alleles so Bb and bB become the same
+    const normalized = g.split("").sort().join("");
+    counts[normalized] = (counts[normalized] || 0) + 1;
+});
 
     const labels = Object.keys(counts);
     const values = Object.values(counts);
