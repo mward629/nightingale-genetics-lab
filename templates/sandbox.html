@@ -24,7 +24,7 @@
 <h3>Offspring:</h3>
 <div id="results"></div>
 
-<h3>Observed Genotype Distribution</h3>
+<h3>Observed Phenotype Distribution</h3>
 <canvas id="chart" width="400" height="200"></canvas>
 
 <script>
@@ -51,18 +51,12 @@ async function generate() {
 
 function updateChart(offspring) {
 
-    let genotypeCounts = {};
     let phenotypeCounts = {};
 
     offspring.forEach(g => {
 
-        // Normalize genotype (Bb and bB become Bb)
         const normalized = g.split("").sort().join("");
 
-        // Count genotypes
-        genotypeCounts[normalized] = (genotypeCounts[normalized] || 0) + 1;
-
-        // Determine phenotype (simple dominance: B = dominant)
         let phenotype;
         if (normalized.includes("B")) {
             phenotype = "Black";
@@ -70,14 +64,13 @@ function updateChart(offspring) {
             phenotype = "Brown";
         }
 
-        phenotypeCounts[phenotype] = (phenotypeCounts[phenotype] || 0) + 1;
+        phenotypeCounts[phenotype] =
+            (phenotypeCounts[phenotype] || 0) + 1;
     });
 
     const ctx = document.getElementById("chart").getContext("2d");
 
-    if (chart) {
-        chart.destroy();
-    }
+    if (chart) chart.destroy();
 
     chart = new Chart(ctx, {
         type: "bar",
@@ -86,37 +79,6 @@ function updateChart(offspring) {
             datasets: [{
                 label: "Observed Phenotype Count",
                 data: Object.values(phenotypeCounts)
-            }]
-        },
-        options: {
-            responsive: false
-        }
-    });
-}
-
-    let counts = {};
-offspring.forEach(g => {
-    // Sort alleles so Bb and bB become the same
-    const normalized = g.split("").sort().join("");
-    counts[normalized] = (counts[normalized] || 0) + 1;
-});
-
-    const labels = Object.keys(counts);
-    const values = Object.values(counts);
-
-    const ctx = document.getElementById("chart").getContext("2d");
-
-    if (chart) {
-        chart.destroy();
-    }
-
-    chart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Observed Count",
-                data: values
             }]
         },
         options: {
