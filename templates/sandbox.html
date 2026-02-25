@@ -65,6 +65,7 @@
 </div>
 
 <script>
+   let allOffspring = []; 
 let genotypeChart;
 let phenotypeChart;
 
@@ -84,7 +85,12 @@ async function generate() {
     document.getElementById("results").innerText =
         data.offspring.join(", ");
 
-    updateCharts(data.offspring);
+    allOffspring = allOffspring.concat(data.offspring);
+
+document.getElementById("results").innerText =
+    allOffspring.join(", ");
+
+updateCharts(allOffspring);
 }
 
 function updateCharts(offspring) {
@@ -192,6 +198,15 @@ function updateCharts(offspring) {
         }
     });
 }
+
+    function resetPopulation() {
+    allOffspring = [];
+    document.getElementById("results").innerText = "";
+    
+    if (genotypeChart) genotypeChart.destroy();
+    if (phenotypeChart) phenotypeChart.destroy();
+}
+    
 </script>
 
 </body>
