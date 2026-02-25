@@ -4,31 +4,50 @@
     <title>Sandbox - Nightingale Genetics Lab</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body style="font-family: Arial; text-align:center;">
+<body style="font-family: Arial; margin:40px;">
 
+<h1>🧬 Nightingale Genetics Lab</h1>
 <h2>Sandbox Mode</h2>
 
-<div>
-    <label>Parent 1 Genotype:</label>
-    <input id="p1" value="Bb">
+<div style="display:flex; gap:40px; margin-bottom:40px;">
 
-    <label>Parent 2 Genotype:</label>
-    <input id="p2" value="Bb">
+    <div style="flex:1; padding:20px; border:1px solid #ddd; border-radius:8px;">
+        <h3>Cross Setup</h3>
 
-    <label>Litter Size:</label>
-    <input id="litter" value="8">
+        <label>Parent 1 Genotype:</label><br>
+        <input id="p1" value="Bb"><br><br>
 
-    <button onclick="generate()">Generate Puppies</button>
+        <label>Parent 2 Genotype:</label><br>
+        <input id="p2" value="Bb"><br><br>
+
+        <label>Litter Size:</label><br>
+        <input id="litter" value="8"><br><br>
+
+        <button onclick="generate()" style="padding:8px 16px;">
+            Generate Puppies
+        </button>
+    </div>
+
+    <div style="flex:1; padding:20px; border:1px solid #ddd; border-radius:8px;">
+        <h3>Offspring Genotypes</h3>
+        <div id="results" style="min-height:60px;"></div>
+    </div>
+
 </div>
 
-<h3>Offspring:</h3>
-<div id="results"></div>
+<div style="display:flex; gap:40px;">
 
-<h3>Observed Genotype Distribution</h3>
-<canvas id="genotypeChart" width="400" height="200"></canvas>
+    <div style="flex:1;">
+        <h3>Genotype Distribution</h3>
+        <canvas id="genotypeChart"></canvas>
+    </div>
 
-<h3>Observed Phenotype Distribution</h3>
-<canvas id="phenotypeChart" width="400" height="200"></canvas>
+    <div style="flex:1;">
+        <h3>Phenotype Distribution</h3>
+        <canvas id="phenotypeChart"></canvas>
+    </div>
+
+</div>
 
 <script>
 let genotypeChart;
