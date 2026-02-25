@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sandbox - Nightingale Genetics Lab</title>
+</head>
+<body style="font-family: Arial; text-align:center;">
+
+<h2>Sandbox Mode</h2>
+
+<div>
+    <label>Parent 1 Genotype:</label>
+    <input id="p1" value="Bb">
+
+    <label>Parent 2 Genotype:</label>
+    <input id="p2" value="Bb">
+
+    <label>Litter Size:</label>
+    <input id="litter" value="8">
+
+    <button onclick="generate()">Generate Puppies</button>
+</div>
+
+<h3>Offspring:</h3>
+<div id="results"></div>
+
+<script>
+async function generate() {
+    const response = await fetch("/generate", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            parent1: document.getElementById("p1").value,
+            parent2: document.getElementById("p2").value,
+            litter: document.getElementById("litter").value
+        })
+    });
+
+    const data = await response.json();
+    document.getElementById("results").innerText =
+        data.offspring.join(", ");
+}
+</script>
+
+</body>
+</html>
