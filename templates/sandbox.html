@@ -24,39 +24,30 @@
 <h3>Offspring:</h3>
 <div id="results"></div>
 
+<h3>Observed Genotype Distribution</h3>
+<canvas id="genotypeChart" width="400" height="200"></canvas>
+
 <h3>Observed Phenotype Distribution</h3>
-<canvas id="chart" width="400" height="200"></canvas>
+<canvas id="phenotypeChart" width="400" height="200"></canvas>
 
 <script>
-let chart;
-
-async function generate() {
-    const response = await fetch("/generate", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            parent1: document.getElementById("p1").value,
-            parent2: document.getElementById("p2").value,
-            litter: document.getElementById("litter").value
-        })
-    });
-
-    const data = await response.json();
-
-    document.getElementById("results").innerText =
-        data.offspring.join(", ");
-
-    updateChart(data.offspring);
-}
+let genotypeChart;
+let phenotypeChart;
 
 function updateChart(offspring) {
 
+    let genotypeCounts = {};
     let phenotypeCounts = {};
 
     offspring.forEach(g => {
 
         const normalized = g.split("").sort().join("");
 
+        // Genotype counts
+        genotypeCounts[normalized] =
+            (genotypeCounts[normalized] || 0) + 1;
+
+        // Phenotype mapping
         let phenotype;
         if (normalized.includes("B")) {
             phenotype = "Black";
@@ -68,11 +59,29 @@ function updateChart(offspring) {
             (phenotypeCounts[phenotype] || 0) + 1;
     });
 
-    const ctx = document.getElementById("chart").getContext("2d");
+    // GENOTYPE GRAPH
+    const gctx = document.getElementById("genotypeChart").getContext("2d");
 
-    if (chart) chart.destroy();
+    if (genotypeChart) genotypeChart.destroy();
 
-    chart = new Chart(ctx, {
+    genotypeChart = new Chart(gctx, {
+        type: "bar",
+        data: {
+            labels: Object.keys(genotypeCounts),
+            datasets: [{
+                label: "Observed Genotype Count",
+                data: Object.values(genotypeCounts)
+            }]
+        },
+        options: { responsive: false }
+    });
+
+    // PHENOTYPE GRAPH
+    const pctx = document.getElementById("phenotypeChart").getContext("2d");
+
+    if (phenotypeChart) phenotypeChart.destroy();
+
+    phenotypeChart = new Chart(pctx, {
         type: "bar",
         data: {
             labels: Object.keys(phenotypeCounts),
@@ -81,9 +90,7 @@ function updateChart(offspring) {
                 data: Object.values(phenotypeCounts)
             }]
         },
-        options: {
-            responsive: false
-        }
+        options: { responsive: false }
     });
 }
 </script>
