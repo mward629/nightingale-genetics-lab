@@ -26,6 +26,12 @@
         <button onclick="generate()" style="padding:8px 16px;">
             Generate Puppies
         </button>
+        
+        <br><br>
+<label>
+    <input type="checkbox" id="toggleExpected" checked>
+    Show Expected Ratios
+</label>
     </div>
 
     <div style="flex:1; padding:20px; border:1px solid #ddd; border-radius:8px;">
@@ -78,6 +84,8 @@ async function generate() {
 
 function updateCharts(offspring) {
 
+    const showExpected = document.getElementById("toggleExpected").checked;
+    
     let genotypeCounts = { "BB": 0, "Bb": 0, "bb": 0 };
     let phenotypeCounts = { "Black": 0, "Brown": 0 };
 
