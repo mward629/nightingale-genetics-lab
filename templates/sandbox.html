@@ -71,10 +71,23 @@
 
 <script>
    let allOffspring = []; 
+    let currentParents = null;
 let genotypeChart;
 let phenotypeChart;
 
 async function generate() {
+
+const p1 = document.getElementById("p1").value;
+const p2 = document.getElementById("p2").value;
+
+// Check if parents changed
+if (currentParents && currentParents !== p1 + "|" + p2) {
+    resetPopulation();
+}
+
+// Store current parents
+currentParents = p1 + "|" + p2;
+    
     const response = await fetch("/generate", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
