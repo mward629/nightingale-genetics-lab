@@ -76,32 +76,65 @@ function updateCharts(offspring) {
             (phenotypeCounts[phenotype] || 0) + 1;
     });
 
+    const total = offspring.length;
+
+    // Expected genotype ratios for Bb x Bb
+    const expectedGenotype = {
+        "BB": total * 0.25,
+        "Bb": total * 0.50,
+        "bb": total * 0.25
+    };
+
+    // Expected phenotype ratios
+    const expectedPhenotype = {
+        "Black": total * 0.75,
+        "Brown": total * 0.25
+    };
+
+    // GENOTYPE GRAPH
     const gctx = document.getElementById("genotypeChart").getContext("2d");
     if (genotypeChart) genotypeChart.destroy();
 
     genotypeChart = new Chart(gctx, {
         type: "bar",
         data: {
-            labels: Object.keys(genotypeCounts),
-            datasets: [{
-                label: "Observed Genotype Count",
-                data: Object.values(genotypeCounts)
-            }]
+            labels: Object.keys(expectedGenotype),
+            datasets: [
+                {
+                    label: "Observed Genotype Count",
+                    data: Object.values(expectedGenotype).map(
+                        (_, i) => genotypeCounts[Object.keys(expectedGenotype)[i]] || 0
+                    )
+                },
+                {
+                    label: "Expected Genotype Count",
+                    data: Object.values(expectedGenotype)
+                }
+            ]
         },
         options: { responsive: false }
     });
 
+    // PHENOTYPE GRAPH
     const pctx = document.getElementById("phenotypeChart").getContext("2d");
     if (phenotypeChart) phenotypeChart.destroy();
 
     phenotypeChart = new Chart(pctx, {
         type: "bar",
         data: {
-            labels: Object.keys(phenotypeCounts),
-            datasets: [{
-                label: "Observed Phenotype Count",
-                data: Object.values(phenotypeCounts)
-            }]
+            labels: Object.keys(expectedPhenotype),
+            datasets: [
+                {
+                    label: "Observed Phenotype Count",
+                    data: Object.values(expectedPhenotype).map(
+                        (_, i) => phenotypeCounts[Object.keys(expectedPhenotype)[i]] || 0
+                    )
+                },
+                {
+                    label: "Expected Phenotype Count",
+                    data: Object.values(expectedPhenotype)
+                }
+            ]
         },
         options: { responsive: false }
     });
