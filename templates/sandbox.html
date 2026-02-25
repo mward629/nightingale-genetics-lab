@@ -34,7 +34,26 @@
 let genotypeChart;
 let phenotypeChart;
 
-function updateChart(offspring) {
+async function generate() {
+    const response = await fetch("/generate", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            parent1: document.getElementById("p1").value,
+            parent2: document.getElementById("p2").value,
+            litter: document.getElementById("litter").value
+        })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("results").innerText =
+        data.offspring.join(", ");
+
+    updateCharts(data.offspring);
+}
+
+function updateCharts(offspring) {
 
     let genotypeCounts = {};
     let phenotypeCounts = {};
@@ -43,11 +62,9 @@ function updateChart(offspring) {
 
         const normalized = g.split("").sort().join("");
 
-        // Genotype counts
         genotypeCounts[normalized] =
             (genotypeCounts[normalized] || 0) + 1;
 
-        // Phenotype mapping
         let phenotype;
         if (normalized.includes("B")) {
             phenotype = "Black";
@@ -59,9 +76,7 @@ function updateChart(offspring) {
             (phenotypeCounts[phenotype] || 0) + 1;
     });
 
-    // GENOTYPE GRAPH
     const gctx = document.getElementById("genotypeChart").getContext("2d");
-
     if (genotypeChart) genotypeChart.destroy();
 
     genotypeChart = new Chart(gctx, {
@@ -76,9 +91,7 @@ function updateChart(offspring) {
         options: { responsive: false }
     });
 
-    // PHENOTYPE GRAPH
     const pctx = document.getElementById("phenotypeChart").getContext("2d");
-
     if (phenotypeChart) phenotypeChart.destroy();
 
     phenotypeChart = new Chart(pctx, {
