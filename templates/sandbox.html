@@ -62,6 +62,11 @@
 </div>
     </div>
 
+<div style="margin-bottom:30px; font-size:22px;">
+    <strong>Total Puppies:</strong> 
+    <span id="totalCount">0</span>
+</div>
+    
 </div>
 
 <script>
@@ -86,6 +91,8 @@ async function generate() {
         data.offspring.join(", ");
 
     allOffspring = allOffspring.concat(data.offspring);
+
+    document.getElementById("totalCount").innerText = allOffspring.length;
 
 document.getElementById("results").innerText =
     allOffspring.join(", ");
@@ -202,6 +209,8 @@ function updateCharts(offspring) {
     function resetPopulation() {
     allOffspring = [];
     document.getElementById("results").innerText = "";
+
+        document.getElementById("totalCount").innerText = 0;
     
     if (genotypeChart) genotypeChart.destroy();
     if (phenotypeChart) phenotypeChart.destroy();
