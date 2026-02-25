@@ -55,84 +55,83 @@ async function generate() {
 
 function updateCharts(offspring) {
 
-    let genotypeCounts = {};
-    let phenotypeCounts = {};
+    let genotypeCounts = { "BB": 0, "Bb": 0, "bb": 0 };
+    let phenotypeCounts = { "Black": 0, "Brown": 0 };
 
     offspring.forEach(g => {
-
         const normalized = g.split("").sort().join("");
 
-        genotypeCounts[normalized] =
-            (genotypeCounts[normalized] || 0) + 1;
+        if (normalized === "BB") genotypeCounts["BB"]++;
+        else if (normalized === "bb") genotypeCounts["bb"]++;
+        else genotypeCounts["Bb"]++;
 
-        let phenotype;
-        if (normalized.includes("B")) {
-            phenotype = "Black";
-        } else {
-            phenotype = "Brown";
-        }
-
-        phenotypeCounts[phenotype] =
-            (phenotypeCounts[phenotype] || 0) + 1;
+        if (normalized.includes("B")) phenotypeCounts["Black"]++;
+        else phenotypeCounts["Brown"]++;
     });
 
     const total = offspring.length;
 
-    // Expected genotype ratios for Bb x Bb
     const expectedGenotype = {
         "BB": total * 0.25,
         "Bb": total * 0.50,
         "bb": total * 0.25
     };
 
-    // Expected phenotype ratios
     const expectedPhenotype = {
         "Black": total * 0.75,
         "Brown": total * 0.25
     };
 
-    // GENOTYPE GRAPH
     const gctx = document.getElementById("genotypeChart").getContext("2d");
     if (genotypeChart) genotypeChart.destroy();
 
     genotypeChart = new Chart(gctx, {
         type: "bar",
         data: {
-            labels: Object.keys(expectedGenotype),
+            labels: ["BB", "Bb", "bb"],
             datasets: [
                 {
-                    label: "Observed Genotype Count",
-                    data: Object.values(expectedGenotype).map(
-                        (_, i) => genotypeCounts[Object.keys(expectedGenotype)[i]] || 0
-                    )
+                    label: "Observed",
+                    data: [
+                        genotypeCounts["BB"],
+                        genotypeCounts["Bb"],
+                        genotypeCounts["bb"]
+                    ]
                 },
                 {
-                    label: "Expected Genotype Count",
-                    data: Object.values(expectedGenotype)
+                    label: "Expected",
+                    data: [
+                        expectedGenotype["BB"],
+                        expectedGenotype["Bb"],
+                        expectedGenotype["bb"]
+                    ]
                 }
             ]
         },
         options: { responsive: false }
     });
 
-    // PHENOTYPE GRAPH
     const pctx = document.getElementById("phenotypeChart").getContext("2d");
     if (phenotypeChart) phenotypeChart.destroy();
 
     phenotypeChart = new Chart(pctx, {
         type: "bar",
         data: {
-            labels: Object.keys(expectedPhenotype),
+            labels: ["Black", "Brown"],
             datasets: [
                 {
-                    label: "Observed Phenotype Count",
-                    data: Object.values(expectedPhenotype).map(
-                        (_, i) => phenotypeCounts[Object.keys(expectedPhenotype)[i]] || 0
-                    )
+                    label: "Observed",
+                    data: [
+                        phenotypeCounts["Black"],
+                        phenotypeCounts["Brown"]
+                    ]
                 },
                 {
-                    label: "Expected Phenotype Count",
-                    data: Object.values(expectedPhenotype)
+                    label: "Expected",
+                    data: [
+                        expectedPhenotype["Black"],
+                        expectedPhenotype["Brown"]
+                    ]
                 }
             ]
         },
