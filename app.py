@@ -14,7 +14,8 @@ def sandbox():
 
 @app.route("/generate", methods=["POST"])
 def generate():
-    data = request.json
+    data = request.get_json()
+
     p1 = data["parent1"]
     p2 = data["parent2"]
     litter = int(data["litter"])
@@ -26,8 +27,6 @@ def generate():
         offspring.append(allele1 + allele2)
 
     return jsonify({"offspring": offspring})
-
-import os
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
